@@ -1,4 +1,5 @@
 #include <eosio.token/eosio.token.hpp>
+#include <eosio.token/freeos_whitelist.hpp>
 
 namespace eosio {
 
@@ -82,6 +83,15 @@ void token::transfer( const name&    from,
     check( from != to, "cannot transfer to self" );
     require_auth( from );
     check( is_account( to ), "to account does not exist");
+
+    // check if the 'from' account is in the transferer whitelist
+    transferers_index transferers_table(name(freeosconfig_acct),
+                                      name(freeosconfig_acct).value);
+    auto transferer_iterator = transferers_table.find(from.value);
+
+    check(transferer_iterator != transferers_table.end(),
+        "the allocate action is protected by transferers whitelist");
+
     auto sym = quantity.symbol.code();
     stats statstable( get_self(), sym.raw() );
     const auto& st = statstable.get( sym.raw() );
