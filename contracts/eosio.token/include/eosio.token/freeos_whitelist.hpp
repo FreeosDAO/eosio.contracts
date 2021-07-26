@@ -1,6 +1,6 @@
 #include <eosio/eosio.hpp>
 
-const std::string freeosconfig_acct = "freeoscfgd";
+const std::string freeosconfig_acct = "statscfg";
 
 // transferers table - a whitelist of who can call the transfer function
 struct[[ eosio::table("transferers") ]] transfer_whitelist {
